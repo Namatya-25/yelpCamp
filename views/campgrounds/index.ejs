@@ -1,0 +1,60 @@
+<!-- ここ全部書き直した -->
+<% layout("layouts/boilerplate") %>
+    <!-- 1. HTMLの data-campgrounds 属性にすべてのデータを安全にJSON化して埋め込みます -->
+    <div 
+        id="cluster-map" 
+        data-campgrounds="<%= JSON.stringify(campgrounds) %>">
+    </div>
+
+    <h1>キャンプ場一覧</h1>
+    <div>
+        <a href="/campgrounds/new">新規登録</a>
+    </div>
+
+    <% for(let campground of campgrounds) { %>
+        <div class="card mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <% if (campground.images && campground.images.length > 0) { %>
+                        <img class="img-fluid" src="<%= campground.images[0].url %>" alt="">
+                    <% } %>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= campground.title %></h5>
+                        <p class="card-text"><%= campground.description %></p>
+                        <p class="card-text">
+                            <small class="text-muted"><%= campground.location %></small>
+                        </p>
+                        <a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">
+                            <%= campground.title %>の詳細
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <script>
+        const maptilerApiKey = "<%- process.env.MAPTILER_API_KEY %>";
+
+        // 2. HTMLの data 属性から、ブラウザ側（JavaScript）でデータを安全に引き出します
+        const mapEl = document.getElementById('cluster-map');
+        const rawData = JSON.parse(mapEl.dataset.campgrounds);
+
+        // 3. ブラウザ側のJavaScriptなら、?.（オプショナルチェーニング）も100%安全に動きます！
+        const campgrounds = {
+            type: "FeatureCollection",
+            features: rawData.map(campground => ({
+                type: "Feature",
+                geometry: campground.geometry,
+                properties: { 
+                    // Mongooseの仕様に合わせて両方のパターンに対応できるようにしておきます
+                    popupMarkup: campground.properties?.popupMarkup || campground.popupMarkup || "" 
+                }
+            }))
+        };
+    </script>
+
+    <!-- 4. 最後にclusterMap.jsを読み込む（ここで上の campgrounds 変数が使われます） -->
+    <script src="/javascripts/clusterMap.js"></script>
