@@ -22,7 +22,8 @@ router.route("/:id")
 
 router.get("/:id/edit", isLoggedIn, isAuthor, catchAsync(campgrounds.renderEditForm));
 
-
+// いいね機能の追加
+router.post("/:id/like", isLoggedIn, catchAsync(campgrounds.likeCampground));
 
 
 module.exports = router;

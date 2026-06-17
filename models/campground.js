@@ -34,6 +34,13 @@ const campgroundSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
+    //いいね機能のスキーマ
+    likes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ],
     reviews: [
         {
             type: Schema.Types.ObjectId,

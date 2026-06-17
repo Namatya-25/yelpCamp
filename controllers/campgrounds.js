@@ -77,3 +77,21 @@ module.exports.deleteCampground = async (req, res) => {
     req.flash("success", "キャンプ場を削除しました");
     res.redirect("/campgrounds");
 }
+
+// いいね機能
+module.exports.likeCampground = async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    const userId = req.user._id;
+
+    const likedIndex = campground.likes.indexOf(userId);
+    if (likedIndex === -1) {
+        campground.likes.push(userId);
+    } else {
+        campground.likes.splice(likedIndex, 1);
+    }
+
+    await campground.save();
+    req.flash("success", "キャンプ場を更新しました！"); // もしflashを使っていれば
+    res.redirect(`/campgrounds/${id}`);
+};

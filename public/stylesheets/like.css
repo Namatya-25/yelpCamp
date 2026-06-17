@@ -1,0 +1,28 @@
+/* いいね機能 */
+
+.like-btn {
+    border-radius: 20px; /* 角丸で柔らかい印象に */
+    transition: transform 0.1s ease; /* クリック時のアニメーション */
+}
+
+.like-btn:active {
+    transform: scale(0.95); /* クリックした時に少し縮む */
+}
+
+.heart-icon {
+    width: 1.1rem; /* アイコンのサイズ */
+    height: 1.1rem;
+    fill: #ddd; /* いいね前のアイコンの色（灰色） */
+    transition: fill 0.2s ease; /* 色の切り替わりをスムーズに */
+}
+
+/* ユーザーがいいねしている状態（.liked クラスがある時） */
+.like-btn.liked {
+    background-color: #ffebee !important; /* 薄い赤色の背景 */
+    color: #ef5350;
+    border-color: #ef5350;
+}
+
+.like-btn.liked .heart-icon {
+    fill: #ef5350; /* いいね後のアイコンの色（鮮やかな赤） */
+}
